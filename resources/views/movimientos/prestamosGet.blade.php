@@ -46,7 +46,8 @@
                     <td class="text-center">{{$prestamo->saldo_actual}}</td>
                     <td class="text-center">{{$prestamo->estado}}</td>
                     <td class="text-center">
-                        <a href='{{url("/movimientos/prestamos/($prestamo->id_prestamo}/abonos")}}'>Abonos</a>
+                    <a href="{{ url('/movimientos/prestamos/' . $prestamo->id_prestamo . '/abonos') }}">Abonos</a>
+
                 </tr>
             @endforeach
         </tbody>

@@ -16,7 +16,7 @@
         <div class="form-group mb-3 col-6">
             <label for="nombre">Nombre</label>
             <input type="text" maxlength="50" class="form-control" name="nombre" placeholder="Ingrese nombre completo" id="nombre" required autofocus>
-        </div>z
+        </div>
 
         <div class="form-group mb-3 col-6">
             <label for="fecha_ingreso">Fecha de ingreso</label>

@@ -1,6 +1,6 @@
-@extends("components.layout")
+@extends("componentes.layout")
 @section("content")
-@component("components.breadcrumbs",["breadcrumbs"=>$breadcrumbs])
+@component("componentes.breadcrumbs",["breadcrumbs"=>$breadcrumbs])
 @endcomponent
 
 <div class="row my-4">

@@ -32,7 +32,7 @@
 |
 <div class="d-flex justify-content-between align-items-center my-3">
     <h1>Abonos</h1>
-    <a class="btn btn-primary" href="{{url('/prestamos/{$prestamo->id_prestamo}/abonos/agregar')}}">Agregar</a>
+    <a class="btn btn-primary" href='{{url("/movimientos/prestamos/{$prestamo->id_prestamo}/abonos/agregar")}}'>Agregar</a>
 </div>
 
 <div class="card p-4">

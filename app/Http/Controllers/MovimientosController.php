@@ -16,14 +16,18 @@ class MovimientosController extends Controller
 {
     public function prestamosGet(): View
     {
-        $prestamo = Prestamo::join("empleado","prestamo.fk_id_empleado","=","empleado.id_empleado")->get();
-        return view("movimientos/prestamosGet",[
-            "prestamos" => $prestamo,
-            "breadcrumbs" => [
-                "Inicio" => url("/"),
-                "Prestamos" => url('/movimientos/prestamos')
-            ]
-            ]);
+        $prestamo = Prestamo::join("empleado", "empleado.id_empleado", "=", "prestamo.fk_id_empleado")
+    ->select("prestamo.*", "empleado.nombre") // Asegurar que se obtiene el nombre del empleado
+    ->get();
+
+return view("movimientos/prestamosGet", [
+    "prestamos" => $prestamo,
+    "breadcrumbs" => [
+        "Inicio" => url("/"),
+        "Prestamos" => url('/movimientos/prestamos')
+    ]
+]);
+
     }
     public function prestamosAgregarGet() {
         $haceunanno = (new DateTime("-1 year"))->format("Y-m-d");
@@ -53,6 +57,9 @@ class MovimientosController extends Controller
         $puesto=Puesto::join("det_emp_puesto", "puesto.id_puesto", "=", "det_emp_puesto.fk_id_puesto")
             ->where("det_emp_puesto.fk_id_empleado","=",$id_empleado)
             ->whereNull("det_emp_puesto.fecha_fin")->first();
+            if (!$puesto) {
+                return back()->withErrors(["error" => "No se encontró un puesto asignado para este empleado."]);
+            }
         $sueldox6=$puesto->sueldo*6;
         if ($monto>$sueldox6){
             return view("/error",["error"=>"La solicitud excede el monto permitido"]);
@@ -101,48 +108,53 @@ class MovimientosController extends Controller
         ]);
     }
     public function abonosAgregarGet($id_prestamo): View
-    {
-        $prestamo = Prestamo::join("empleado", "empleado.id_empleado", "=", "prestamo.fk_id_empleado")
-            ->where("id_prestamo", $id_prestamo)->first();
-    
-        $abonos = Abono::where("abono.fk_id_prestamo", $id_prestamo)->get();
-        $num_abono = count($abonos) + 1;
-    
-        // Obtener el último abono registrado
-        $ultimo_abono = Abono::where("abono.fk_id_prestamo", $id_prestamo)
-            ->orderBy("fecha", "desc")
-            ->first();
-    
-        // Si hay un abono previo, tomamos su saldo actual, si no, usamos el saldo del préstamo
-        $saldo_actual = $ultimo_abono ? $ultimo_abono->saldo_actual : $prestamo->saldo_actual;
-        
-        // Cálculo basado en el saldo actual correcto
-        $monto_interes = $saldo_actual * ($prestamo->tasa_mensual / 100);
-        $monto_cobrado = $prestamo->pago_fijo_cap + $monto_interes;
-        $saldo_pendiente = $saldo_actual - $prestamo->pago_fijo_cap;
-    
-        if ($saldo_pendiente < 0) {
-            $pago_fijo_cap = $prestamo->pago_fijo_cap + $saldo_pendiente;
-            $saldo_pendiente = 0;
-        } else {
-            $pago_fijo_cap = $prestamo->pago_fijo_cap;
-        }
-    
-        return view('movimientos/abonosAgregarGet', [
-            'prestamo' => $prestamo,
-            'num_abono' => $num_abono,
-            'pago_fijo_cap' => $pago_fijo_cap,
-            'monto_interes' => $monto_interes,
-            'monto_cobrado' => $monto_cobrado,
-            'saldo_pendiente' => $saldo_pendiente,
-            'breadcrumbs' => [
-                "Inicio" => url("/"),
-                "Prestamos" => url("/movimientos/prestamos"),
-                "Abonos" => url("/prestamos/{$prestamo->id_prestamo}/abonos"),
-                "Agregar" => "",
-            ]
-        ]);
+{
+    $prestamo = Prestamo::join("empleado", "empleado.id_empleado", "=", "prestamo.fk_id_empleado")
+        ->where("id_prestamo", $id_prestamo)
+        ->select("prestamo.*", "empleado.nombre") // asegúrate de incluir los campos necesarios
+        ->first();
+
+    // Verificación para evitar error si no se encuentra el préstamo
+    if (!$prestamo) {
+        abort(404, "Préstamo no encontrado");
     }
+
+    $abonos = Abono::where("abono.fk_id_prestamo", $id_prestamo)->get();
+    $num_abono = count($abonos) + 1;
+
+    $ultimo_abono = Abono::where("abono.fk_id_prestamo", $id_prestamo)
+        ->orderBy("fecha", "desc")
+        ->first();
+
+    $saldo_actual = $ultimo_abono ? $ultimo_abono->saldo_actual : $prestamo->saldo;
+
+    $monto_interes = $saldo_actual * ($prestamo->tasa_mensual / 100);
+    $monto_cobrado = $prestamo->pago_fijo_cap + $monto_interes;
+    $saldo_pendiente = $saldo_actual - $prestamo->pago_fijo_cap;
+
+    if ($saldo_pendiente < 0) {
+        $pago_fijo_cap = $prestamo->pago_fijo_cap + $saldo_pendiente;
+        $saldo_pendiente = 0;
+    } else {
+        $pago_fijo_cap = $prestamo->pago_fijo_cap;
+    }
+
+    return view('movimientos/abonosAgregarGet', [
+        'prestamo' => $prestamo,
+        'num_abono' => $num_abono,
+        'pago_fijo_cap' => $pago_fijo_cap,
+        'monto_interes' => $monto_interes,
+        'monto_cobrado' => $monto_cobrado,
+        'saldo_pendiente' => $saldo_pendiente,
+        'breadcrumbs' => [
+            "Inicio" => url("/"),
+            "Prestamos" => url("/movimientos/prestamos"),
+            "Abonos" => url("/movimientos/prestamos/{$id_prestamo}/abonos"),
+            "Agregar" => "",
+        ]
+    ]);
+}
+
     public function abonosAgregarPost(Request $request)
     {
         $id_prestamo = $request->input("id_prestamo");
@@ -175,6 +187,29 @@ class MovimientosController extends Controller
 
         $prestamo->save();
 
-        return redirect("/prestamos/{$id_prestamo}/abonos");
+        return redirect("/movimientos/prestamos/{$id_prestamo}/abonos");
+    }
+    public function empleadosPrestamosGet(Request $request, $id_empleado): View
+    {
+        // Buscar el empleado por ID
+        $empleado = Empleado::find($id_empleado);
+    
+        // Validar si el empleado existe
+        if (!$empleado) {
+            abort(404, "Empleado no encontrado");
+        }
+    
+        // Obtener todos los préstamos del empleado
+        $prestamos = Prestamo::where('fk_id_empleado', $id_empleado)->get();
+    
+        // Retornar la vista con los datos necesarios
+        return view('movimientos/empleadosPrestamosGet', [
+            'empleado' => $empleado,
+            'prestamos' => $prestamos,
+            'breadcrumbs' => [
+                'Inicio' => url('/'),
+                'Prestamos' => url('/movimientos/prestamos'),
+            ],
+        ]);
     }
 }

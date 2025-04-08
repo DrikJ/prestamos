@@ -16,9 +16,9 @@ Route::post ("/catalogos/puestos/agregar", [CatalogosController::class, "puestos
 Route::get ("/empleados/agregar", [CatalogosController::class, "empleadosAgregarGet"]);
 Route::post ("/empleados/agregar", [CatalogosController::class, "empleadosAgregarPost"]);
 Route::get("/empleados/{id}/puestos", [CatalogosController::class, "empleadosPuestosGet"])->where('id', '[0-9]+');
-Route::get("/catalogos/empleados/{id_empleado}/puestos/cambiar", [CatalogosController::class, 'empleadosPuestosCambiarGet'])->where("id", "[0-9]+");
-Route::post("/catalogos/empleados/{id_empleado}/puestos/cambiar", [CatalogosController::class, 'empleadosPuestosCambiarPost'])->where("id","[0-9]+");
-
+Route::get("/empleados/{id_empleado}/puestos/cambiar", [CatalogosController::class, 'empleadosPuestosCambiarGet'])->where("id", "[0-9]+");
+Route::post("/empleados/{id_empleado}/puestos/cambiar", [CatalogosController::class, 'empleadosPuestosCambiarPost'])->where("id","[0-9]+");
+Route::get('/movimientos/empleados/{id_empleado}', [MovimientosController::class, 'empleadosPrestamosGet']);
 
 
 ////////////////////////////////////MOVIMIENTOS CONTROLLER//////////////////////////////////
@@ -27,9 +27,10 @@ Route::get("/movimientos/prestamos", [MovimientosController::class, "prestamosGe
 Route::get ("/movimientos/prestamos/agregar", [MovimientosController::class, "PrestamosAgregarGet"]);
 Route::post ("/movimientos/prestamos/agregar", [MovimientosController::class, "PrestamosAgregarPost"]);
 
+
 Route::get("/movimientos/prestamos/{prest}/abonos",[MovimientosController::class, "abonosGet"])->where("prest","\\d+");
-Route::get("/prestamos/{prest}/abonos/agregar", [MovimientosController::class, "abonosAgregarGet"])->where("prest", "\\d+");
-Route::post("/prestamos/{prest}/abonos/agregar", [MovimientosController::class, "abonosAgregarPost"])->where("prest", "\\d+");
+Route::get("/movimientos/prestamos/{prest}/abonos/agregar", [MovimientosController::class, "abonosAgregarGet"])->where("prest", "\\d+");
+Route::post("/movimientos/prestamos/{prest}/abonos/agregar", [MovimientosController::class, "abonosAgregarPost"])->where("prest", "\\d+");
 
 //reportes
 Route::get("/reportes",[ReportesController::class,"indexGet"]);

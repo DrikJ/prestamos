@@ -14,7 +14,7 @@
         <div class="col">{{$empleado->nombre}}</div>
     </div>
 </div>
-<form class="card p-4 mt-2" method="post" action='{{url("/catalogos/empleados/{$empleado->id_empleado}/puestos/cambiar")}}'>
+<form class="card p-4 mt-2" method="post" action='{{url("/empleados/{$empleado->id_empleado}/puestos/cambiar")}}'>
 
     @csrf 
     <div class="row">

@@ -8,6 +8,7 @@ use App\Models\Puesto;
 use App\Models\Empleado;
 use App\Models\Detalle_Emp_Puesto;
 use App\Models\Prestamo;
+use \DateTime;
 
 class CatalogosController extends Controller
 {
@@ -129,23 +130,24 @@ public function empleadosPuestosGet(Request $request, $id_empleado)
         ]);
     }
 
-    public function empleadosPuestosCambiarPost(Request $request, $id_empleado)
+    public function empleadosPuestosCambiarPost(Request $request, $fk_id_empleado)
     {
         $fecha_inicio = $request->input("fecha_inicio");
         $fecha_fin = (new DateTime($fecha_inicio))->modify("-1 day");
-        $anterior = Detalle_emp_puesto::where("id_empleado", $id_empleado)
+        $anterior = Detalle_emp_puesto::where("fk_id_empleado", $fk_id_empleado)
             ->whereNull("fecha_fin")
             ->update(["fecha_fin" => $fecha_fin->format("Y-m-d")]);
     
         /** Agregar el nuevo puesto */
-        $puesto = new Detalle_emp_puesto([
-            "id_empleado" => $id_empleado,
-            "id_puesto" => $request->input("puesto"), /** Viene el dato del formulario */
+        $puestoNuevo = new Detalle_emp_puesto([
+            "fk_id_empleado" => $fk_id_empleado,
+            "fk_id_puesto" => $request->input("puesto"), // Usa la clave correcta
             "fecha_inicio" => $fecha_inicio,
         ]);
-        $puesto->save();
+        $puestoNuevo->save();
+        
     
-        return redirect("/empleados/{$id_empleado}/puestos");
+        return redirect("/empleados/{$fk_id_empleado}/puestos");
     }
         
 }

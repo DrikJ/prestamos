@@ -2,6 +2,8 @@
 @section("content")
 @component("componentes.breadcrumbs",["breadcrumbs"=>$breadcrumbs])
 @endcomponent
+
+
 <h1>Agregar abono del préstamo {{$prestamo->id_prestamo}}</h1>
 <div class="card">
     <div class="row card-body">
@@ -31,8 +33,15 @@
     </div>
 </div>
 
-<a href="{{ url('/prestamos/'.$prestamo->id_prestamo.'/abonos/agregar') }}">Agregar abono</a>
-@csrf <!-- Sirve para validar que la petición de los datos enviados provengan del formulario actual -->
+<a href="{{ url('/movimientos/prestamos/' . $prestamo->id_prestamo . '/abonos/agregar') }}">Agregar abono</a>
+
+<form method="POST" action="{{ url('/movimientos/prestamos/' . $prestamo->id_prestamo . '/abonos/agregar') }}">
+    @csrf
+    <!-- Todos los inputs y botones aquí -->
+    <button type="submit" class="btn btn-primary">Guardar</button>
+
+
+ <!-- Sirve para validar que la petición de los datos enviados provengan del formulario actual -->
     <input type="hidden" name="id_prestamo" value="{{$prestamo->id_prestamo}}">
 
     <div class="row my-4">

@@ -35,7 +35,7 @@
                     {{$empleado->activo}}
                 </td>
                 <td><a href='{{url("/empleados/{$empleado->id_empleado}/puestos")}}'>Puestos</a></td>
-                <td><a href='{{url("/empleados/{$empleado->id_empleado}/prestamos")}}'>Prestamos</a></td>
+                <td><a href="{{ url('/movimientos/empleados/' . $empleado->id_empleado) }}" >Préstamos</a><td>
             </tr>
         @endforeach
 </tbody><table>
