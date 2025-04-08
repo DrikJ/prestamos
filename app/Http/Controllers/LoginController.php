@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
-
-namespace App\Http\Controllers;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Iluminate\Support\Facades\Validator;
-use Iluminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 
@@ -39,6 +36,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/'); //redirige al login
-    }
+        return redirect('/'); //redirige al login
+        }
 }

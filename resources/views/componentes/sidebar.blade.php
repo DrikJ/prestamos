@@ -6,7 +6,6 @@
     <a href="{{url('/movimientos/prestamos')}}" class="nav-link">Préstamos</a>
 
     <a href="{{url('/reportes/')}}" class="nav-link">Reportes</a>
-    <a href="{{url('/logout')}}" class="nav-link">Salir</a>
     <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"  class="nav-link">Salir</a>
 </nav>
 

@@ -9,6 +9,14 @@
         <div class="col-md-6 offset-md-3">
             <div class="card">
                 <div class="card-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                @foreach ($errors->all() as $error)
+             <div>{{ $error }}</div>
+                @endforeach
+                </div>
+                @endif
+
                     <form action="{{ url('/login') }}" method="POST">
                         @csrf
                         <div class="mb-3">
