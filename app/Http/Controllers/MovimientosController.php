@@ -9,7 +9,7 @@ use App\Models\Detalle_Emp_Puesto;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon as SupportCarbon;
-use Illuminate\Support\Facedes\DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class MovimientosController extends Controller
@@ -74,7 +74,7 @@ return view("movimientos/prestamosGet", [
         $saldo=$request->input("saldo");
         $estado=$request->input("estado");
         $prestamo=new Prestamo([
-            "id_empleado"=>$id_empleado,
+            "fk_id_empleado"=>$id_empleado,
             "fecha_solicitud"=>$fecha_solicitud,
             "monto"=>$monto,
             "plazo"=>$plazo,
@@ -167,7 +167,7 @@ return view("movimientos/prestamosGet", [
         
         // Crear el nuevo abono
         $abono = new Abono([
-            "id_prestamo" => $id_prestamo,
+            "fk_id_prestamo" => $id_prestamo,
             "num_abono" => $num_abono,
             "fecha" => $fecha,
             "monto_capital" => $monto_capital,

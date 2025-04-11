@@ -33,7 +33,6 @@
     </div>
 </div>
 
-<a href="{{ url('/movimientos/prestamos/' . $prestamo->id_prestamo . '/abonos/agregar') }}">Agregar abono</a>
 
 <form method="POST" action="{{ url('/movimientos/prestamos/' . $prestamo->id_prestamo . '/abonos/agregar') }}">
     @csrf

@@ -26,15 +26,15 @@ class ReportesController extends Controller
     $fecha = $request->query("fecha", $fecha);
 
     $prestamos = Prestamo::join("empleado", "empleado.id_empleado", "=", "prestamo.fk_id_empleado")
-        ->leftJoin("abono", "abono.fk_id_prestamo", "=", "prestamo.id_prestamo")
-        ->select("prestamo.id_prestamo", "empleado.nombre", "prestamo.monto")
-        ->selectRaw("SUM(abono.monto_capital) AS total_capital")
-        ->selectRaw("SUM(abono.monto_interes) AS total_interes")
-        ->selectRaw("SUM(abono.monto_cobrado) AS total_cobrado")
-        ->groupBy("prestamo.id_prestamo", "empleado.nombre", "prestamo.monto")
-        ->where("prestamo.fecha_ini_desc", "<=", $fecha)
-        ->where("prestamo.fecha_fin_desc", ">=", $fecha)
-        ->get()->all();
+    ->leftJoin("abono", "abono.fk_id_prestamo", "=", "prestamo.id_prestamo")
+    ->select("prestamo.id_prestamo", "empleado.nombre", "prestamo.monto")
+    ->selectRaw("COALESCE(SUM(abono.monto_capital), 0) AS total_capital")
+    ->selectRaw("COALESCE(SUM(abono.monto_interes), 0) AS total_interes")
+    ->selectRaw("COALESCE(SUM(abono.monto_cobrado), 0) AS total_cobrado")
+    ->groupBy("prestamo.id_prestamo", "empleado.nombre", "prestamo.monto")
+    ->where("prestamo.fecha_ini_desc", "<=", $fecha)
+    ->where("prestamo.fecha_fin_desc", ">=", $fecha)
+    ->get(); 
 
     // var_dump($prestamos);
 

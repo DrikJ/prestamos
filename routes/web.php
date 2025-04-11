@@ -33,9 +33,11 @@ Route::get("/movimientos/prestamos/{prest}/abonos/agregar", [MovimientosControll
 Route::post("/movimientos/prestamos/{prest}/abonos/agregar", [MovimientosController::class, "abonosAgregarPost"])->where("prest", "\\d+");
 
 //reportes
+
+Route::get('/reportes/prestamos-activos', [ReportesController::class, 'prestamosActivosGet'])->name('prestamosVigentes');
+Route::get('/reportes/matriz-abonos', [ReportesController::class, 'matrizAbonosGet'])->name('matrizAbonos');
 Route::get("/reportes",[ReportesController::class,"indexGet"]);
-Route::get("/reportes/prestamos-activos",[ReportesController::class,"prestamosActivosGet"]);
-Route::get("/reportes/matriz-abonos",[ReportesController::class,"matrizAbonosGet"]);
+
 
 //login controller y register
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
