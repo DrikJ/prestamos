@@ -53,5 +53,6 @@
         <div class="col text-center">
             <p class="text-muted">Debes iniciar sesión para ver los datos guardados.</p>
         </div>
+
     </div>
 @endsection
