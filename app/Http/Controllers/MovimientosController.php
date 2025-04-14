@@ -52,42 +52,39 @@ return view("movimientos/prestamosGet", [
     }
     public function prestamosAgregarPost(Request $request)
     {
-        $id_empleado=$request->input("id_empleado");
-        $monto=$request->input("monto");
-        $puesto=Puesto::join("det_emp_puesto", "puesto.id_puesto", "=", "det_emp_puesto.fk_id_puesto")
-            ->where("det_emp_puesto.fk_id_empleado","=",$id_empleado)
-            ->whereNull("det_emp_puesto.fecha_fin")->first();
-            if (!$puesto) {
-                return back()->withErrors(["error" => "No se encontró un puesto asignado para este empleado."]);
+            $id_empleado=$request->input("id_empleado");
+            $monto=$request->input("monto");
+            $puesto=Puesto::join("det_emp_puesto", "puesto.id_puesto", "=", "det_emp_puesto.fk_id_puesto")
+                ->where("det_emp_puesto.fk_id_empleado","=",$id_empleado)
+                ->whereNull("det_emp_puesto.fecha_fin")->first();
+            $sueldox6=$puesto->sueldo*6;
+            if ($monto>$sueldox6){
+                return view("/error",["error"=>"La solicitud excede el monto permitido"]);
             }
-        $sueldox6=$puesto->sueldo*6;
-        if ($monto>$sueldox6){
-            return view("/error",["error"=>"La solicitud excede el monto permitido"]);
-        }
-        $fecha_solicitud=$request->input("fecha_solicitud");
-        $plazo=$request->input("plazo");
-        $fecha_aprob=$request->input("fecha_aprob");
-        $tasa_mensual=$request->input("tasa_mensual");
-        $pago_fijo_cap=$request->input("pago_fijo_cap");
-        $fecha_ini_desc=$request->input("fecha_ini_desc");
-        $fecha_fin_desc=$request->input("fecha_fin_desc");
-        $saldo=$request->input("saldo");
-        $estado=$request->input("estado");
-        $prestamo=new Prestamo([
-            "fk_id_empleado"=>$id_empleado,
-            "fecha_solicitud"=>$fecha_solicitud,
-            "monto"=>$monto,
-            "plazo"=>$plazo,
-            "fecha_aprob"=>$fecha_aprob,
-            "tasa_mensual"=>$tasa_mensual,
-            "pago_fijo_cap"=>$pago_fijo_cap,
-            "fecha_ini_desc"=>$fecha_ini_desc,
-            "fecha_fin_desc"=>$fecha_fin_desc,
-            "saldo"=>$saldo,
-            "estado"=>$estado,
-        ]);
-        $prestamo->save();
-        return redirect("/movimientos/prestamos"); // redirige al listado de prestamos
+            $fecha_solicitud=$request->input("fecha_solicitud");
+            $plazo=$request->input("plazo");
+            $fecha_aprob=$request->input("fecha_aprob");
+            $tasa_mensual=$request->input("tasa_mensual");
+            $pago_fijo_cap=$request->input("pago_fijo_cap");
+            $fecha_ini_desc=$request->input("fecha_ini_desc");
+            $fecha_fin_desc=$request->input("fecha_fin_desc");
+            $saldo_actual=$request->input("saldo_actual");
+            $estado=$request->input("estado");
+            $prestamo=new Prestamo([
+                "fk_id_empleado"=>$id_empleado,
+                "fecha_solicitud"=>$fecha_solicitud,
+                "monto"=>$monto,
+                "plazo"=>$plazo,
+                "fecha_aprob"=>$fecha_aprob,
+                "tasa_mensual"=>$tasa_mensual,
+                "pago_fijo_cap"=>$pago_fijo_cap,
+                "fecha_ini_desc"=>$fecha_ini_desc,
+                "fecha_fin_desc"=>$fecha_fin_desc,
+                "saldo_actual"=>$saldo_actual,
+                "estado"=>$estado,
+            ]);
+            $prestamo->save();
+            return redirect("/movimientos/prestamos"); // redirige al listado de prestamos
     }
 
     public function abonosGet($id_prestamo): View

@@ -24,8 +24,8 @@ Route::get('/movimientos/empleados/{id_empleado}', [MovimientosController::class
 ////////////////////////////////////MOVIMIENTOS CONTROLLER//////////////////////////////////
 Route::get("/movimientos/prestamos", [MovimientosController::class, "prestamosGet"]);
 
-Route::get ("/movimientos/prestamos/agregar", [MovimientosController::class, "PrestamosAgregarGet"]);
-Route::post ("/movimientos/prestamos/agregar", [MovimientosController::class, "PrestamosAgregarPost"]);
+Route::get ("/movimientos/prestamos/agregar", [MovimientosController::class, "prestamosAgregarGet"]);
+Route::post ("/movimientos/prestamos/agregar", [MovimientosController::class, "prestamosAgregarPost"]);
 
 
 Route::get("/movimientos/prestamos/{prest}/abonos",[MovimientosController::class, "abonosGet"])->where("prest","\\d+");

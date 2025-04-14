@@ -1,21 +1,36 @@
-@extends("componentes.layout")
+@extends('componentes.layout')
 
-@section("content")
-
-    @component("componentes.breadcrumbs", ["breadcrumbs" => $breadcrumbs])
+@section('content')
+    @component('componentes.breadcrumbs', ["breadcrumbs" => $breadcrumbs])
     @endcomponent
 
-    <h2>Préstamos Activos</h2>
+    <div class="row my-4">
+        <div class="col">
+            <h1>Préstamos Activos</h1>
+        </div>
+    </div>
 
-    @if ($prestamos->count() > 0)
-        <table border="1" cellpadding="5" cellspacing="0">
+    <form class="card p-4 my-4" action="{{ url('/reportes/prestamos-activos') }}" method="get">
+        <div class="row">
+            <div class="col form-group">
+                <label for="txtfecha">Fecha</label>
+                <input class="form-control" type="date" name="fecha" id="txtfecha" value="{{ $fecha }}">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn-primary btn">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
+    @if ($prestamos->count())
+        <table class="table" id="maintable">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>NOMBRE</th>
                     <th>PRESTADO</th>
                     <th>CAPITAL</th>
-                    <th>INTERÉS</th>
+                    <th>INTERES</th>
                     <th>COBRADO</th>
                 </tr>
             </thead>
@@ -44,5 +59,4 @@
     @else
         <p>No hay préstamos activos en este momento.</p>
     @endif
-
 @endsection
